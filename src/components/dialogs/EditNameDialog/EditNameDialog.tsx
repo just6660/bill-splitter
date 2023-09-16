@@ -19,23 +19,38 @@ interface EditNameDialogProps {
   selectedIndex: number
 }
 
+const checkIsFormValid = (
+  firstName: string,
+  users: User[],
+  selectedIndex: number
+) => {
+  if (
+    firstName === '' ||
+    users.length === 0 ||
+    firstName === users[selectedIndex].firstName
+  ) {
+    return false
+  }
+  return true
+}
+
 const EditNameDialog: FC<EditNameDialogProps> = (props) => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [isFirstNameValid, setIsFirstNameValid] = useState(true)
-  const [isFormValid, setIsFormValid] = useState(false)
+
+  const isFormValid = checkIsFormValid(
+    firstName,
+    props.users,
+    props.selectedIndex
+  )
+
+  const isFirstNameValid = firstName === '' ? false : true
 
   useEffect(() => {
     if (props.users.length === 0) return
     setFirstName(props.users[props.selectedIndex].firstName)
     setLastName(props.users[props.selectedIndex].lastName ?? '')
-    setIsFirstNameValid(true)
-    setIsFormValid(false)
   }, [props.open])
-
-  useEffect(() => {
-    checkFormValid()
-  }, [isFirstNameValid])
 
   const handleDialogSave = () => {
     if (!firstName) return
@@ -67,14 +82,6 @@ const EditNameDialog: FC<EditNameDialogProps> = (props) => {
     props.setOpen(false)
   }
 
-  const checkFormValid = () => {
-    if (isFirstNameValid) {
-      setIsFormValid(true)
-    } else {
-      setIsFormValid(false)
-    }
-  }
-
   return (
     <Dialog
       open={props.open}
@@ -96,8 +103,6 @@ const EditNameDialog: FC<EditNameDialogProps> = (props) => {
             value={firstName}
             onChange={(e) => {
               setFirstName(e.target.value)
-              setIsFirstNameValid(e.target.value !== '')
-              checkFormValid()
             }}
           />
           <TextField
@@ -105,7 +110,6 @@ const EditNameDialog: FC<EditNameDialogProps> = (props) => {
             value={lastName}
             onChange={(e) => {
               setLastName(e.target.value)
-              checkFormValid()
             }}
           />
         </div>

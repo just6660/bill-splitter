@@ -1,26 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import './App.css'
+import { Item, User } from './consts'
+import { ImageInput, ItemsAccordion, UsersAccordion } from './components'
 
 function App() {
+  const [receiptImg, setReceiptImg] = useState<File | null>(null)
+  const [users, setUsers] = useState<User[]>([])
+  const [items, setItems] = useState<Item[]>([])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen flex flex-col justify-center items-center gap-4 p-4">
+      <UsersAccordion users={users} setUsers={setUsers} setItems={setItems} />
+      <ItemsAccordion items={items} setItems={setItems} users={users} />
+      {/* <ImageInput handleImg={setReceiptImg} /> */}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
